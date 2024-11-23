@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Manager;
 
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
@@ -20,7 +20,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class UserRegisterController extends Controller
 {
     public function index(Request $request){
-    
+
         $registers = RegisterUser::when($request->range_date, function ($query) use ($request) {
             $date = explode(" - ", $request->range_date);
         
@@ -31,7 +31,8 @@ class UserRegisterController extends Controller
             // Gunakan whereBetween langsung, tanpa if
             $query->whereBetween('visit_date', [$startDate, $endDate]);
         })
-        ->latest()
+        ->where('rangking','!=',1)
+        ->orderBy('rangking','asc')
         ->paginate(25)->appends(request()->query());
         $modifieds = $registers->map(function($item){
             $item->qrcode = QrCode::size(100)->generate(route('qrcode',['uuid' => $item->uuid]));
@@ -41,14 +42,14 @@ class UserRegisterController extends Controller
         $data['range_date'] = $request->range_date ?? null;
         $registers->setCollection($modifieds);
         $data['registers'] = $registers;
-        return view('admin.user-register.index',$data);
+        return view('manager.user-register.index',$data);
     }
 
     public function approve($id){
         
         $register = RegisterUser::where('id',$id)->first();
-        $register->status = 'Sudah Disetujui';
-        $register->rangking = 2;
+        $register->status = 'Sudah Disetujui' ;
+        $register->rangking = 3;
         $register->save();
         
         Alert::success('Approve Berhasil', 'Registrasi user berhasil di setujui!');
@@ -58,7 +59,7 @@ class UserRegisterController extends Controller
     public function create(){
         $data['key'] = Uuid::uuid4();
         $data['tenants'] = Tenant::all();
-        return view('admin.user-register.create',$data);
+        return view('manager.user-register.create',$data);
     }
 
     public function store(Request $request){
@@ -68,7 +69,7 @@ class UserRegisterController extends Controller
             $checkRegister = RegisterUser::where('key',$request->key)->first();
             if($checkRegister){
                 Alert::success('Tambah Berhasil', 'Registrasi user berhasil di dibuat!');
-                return redirect()->route('admin.user-register.index');
+                return redirect()->route('manager.user-register.index');
             }
 
             $attachmentReference = '';
@@ -117,7 +118,7 @@ class UserRegisterController extends Controller
                 }
             }
             if(!empty($block)){
-                return redirect()->route('admin.user-register.index')->with('error',$block);
+                return redirect()->route('manager.user-register.index')->with('error',$block);
             }
 
             $register = RegisterUser::create([
@@ -143,7 +144,7 @@ class UserRegisterController extends Controller
                 'other_text' => $request->other ? $request->other_text : '',
                 'category' => $request->category,
                 'check_in_status' => 1,
-                'status' => 'Menunggu Persetujuan Supervisor',
+                'status' => 'Menunggu Persetujuan manager',
                 'rangking' => 1,
                 'key' => $request->key
             ]);
@@ -191,7 +192,7 @@ class UserRegisterController extends Controller
 
             DB::commit();
             Alert::success('Tambah Berhasil', 'Registrasi user berhasil di dibuat!');
-            return redirect()->route('admin.user-register.index');
+            return redirect()->route('manager.user-register.index');
         } catch (\Throwable $th) {
             DB::rollback();
             dd($th);
@@ -204,16 +205,16 @@ class UserRegisterController extends Controller
         $data['register'] = RegisterUser::where('id', $id)->first();
         $data['details'] = DetailVisitor::where('register_user_id', $data['register']->id)->get();
         $data['personal'] = PersonalRegister::where('register_user_id', $data['register']->id)->first();
-        return view('admin.user-register.detail',$data);
+        return view('manager.user-register.detail',$data);
     }
 
     public function edit(){
-        return view('admin.user-register.edit');
+        return view('manager.user-register.edit');
     }
 
     public function reschedule($id){
         $data['schedule'] = RegisterUser::where('id', $id)->first();
-        return view('admin.user-register.reschedule',$data);
+        return view('manager.user-register.reschedule',$data);
     }
 
     public function updateReschedule(Request $request,$id){
@@ -232,23 +233,10 @@ class UserRegisterController extends Controller
 
             DB::commit();
             Alert::success('Reschedule Berhasil', 'Data Berhasil direschedule!');
-            return redirect()->route('admin.user-register.index');
+            return redirect()->route('manager.user-register.index');
         } catch (\Throwable $th) {
             DB::rollback();
             throw $th;
         }
-    }
-
-    
-
-    public function qrcode($uuid){
-        $register = RegisterUser::where('uuid', $uuid)->first();
-        $data['register'] = $register;
-
-        if(!$register){
-            return redirect()->route('user.index');
-        }
-        $data['details'] = DetailVisitor::where('register_user_id', $register->id)->get();
-        return view('admin.user-register.qrcode',$data);
     }
 }

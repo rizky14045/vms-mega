@@ -1,4 +1,4 @@
-@extends('admin.layout.app')
+@extends('security.layout.app')
 @section('styles')
 <style>
     .accordion-button::after {
@@ -14,7 +14,7 @@
 
     <div class="text-end">
         <ol class="breadcrumb m-0 py-0">
-            <li class="breadcrumb-item"><a href="{{route('admin.home.index')}}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{route('security.home.index')}}">Dashboard</a></li>
             <li class="breadcrumb-item active">Detail Registrasi Visitor</li>
         </ol>
     </div>
@@ -70,7 +70,7 @@
                               <th class="pe-2 text-nowrap ">Referensi</th> <!-- Adjust spacing with pe-* class -->
                               <td class="text-nowrap"> : {{$register->reference}}
                                 @if ($register->attachment_reference)
-                                    <a href="{{asset('uploads/attachment_reference/'.$register->attachment_reference)}}" class="btn btn-sm btn-success ms-3" download="">Download</a>
+                                    <a href="#" class="btn btn-sm btn-success ms-3">Download</a>
                                 @endif
                                 </td>
                           </tr>
@@ -151,14 +151,14 @@
                                 <th class="pe-2 text-nowrap ">Referensi</th> <!-- Adjust spacing with pe-* class -->
                                 <td class="text-nowrap text-capitalize"> : {{$personal->agreement}} 
                                     @if ($personal->agreement_reference)
-                                        <a href="{{asset('uploads/attachment_agreement/'.$personal->agreement_reference)}}" class="btn btn-sm btn-success ms-3">Download</a>
+                                        <a href="#" class="btn btn-sm btn-success ms-3">Download</a>
                                     @endif
                                 </td>
                             </tr>
                         </table>
                     </div>
                     <div class="d-flex justify-content-center gap-2 mt-5 pb-5">
-                        <a href="{{route('admin.user-register.index')}}" class="btn btn-danger">Back</a>
+                        <a href="{{route('security.user-register.index')}}" class="btn btn-danger">Back</a>
                     </div>
                 </div>       
             </div> <!-- end card body -->

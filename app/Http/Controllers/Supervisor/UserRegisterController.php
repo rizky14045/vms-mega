@@ -32,7 +32,7 @@ class UserRegisterController extends Controller
             $query->whereBetween('visit_date', [$startDate, $endDate]);
         })
         ->latest()
-        ->paginate(25);
+        ->paginate(25)->appends(request()->query());
         $modifieds = $registers->map(function($item){
             $item->qrcode = QrCode::size(100)->generate(route('qrcode',['uuid' => $item->uuid]));
             return $item;

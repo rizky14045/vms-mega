@@ -22,3 +22,5 @@ Route::post('/logout', [HomeController::class, 'logout'])->name('logout');
 require_once('user/web.php');
 require_once('admin/web.php');
 require_once('supervisor/web.php');
+require_once('manager/web.php');
+require_once('security/web.php');
