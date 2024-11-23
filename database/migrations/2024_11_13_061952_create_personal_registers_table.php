@@ -21,9 +21,8 @@ class CreatePersonalRegistersTable extends Migration
             $table->string('email')->nullable();
             $table->string('office_number')->nullable();
             $table->string('phone_number')->nullable();
-            $table->boolean('onsite_check')->default(false);
-            $table->boolean('email_check')->default(false);
-            $table->boolean('oncall_check')->default(false);
+            $table->string('agreement')->nullable();
+            $table->string('agreement_reference')->nullable();
             $table->text('note')->nullable();
             $table->timestamps();
         });

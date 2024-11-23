@@ -36,6 +36,30 @@
                         <span> Registrasi User </span>
                     </a>
                 </li>
+                <li>
+                    <a href="#sidebarBulanan" data-bs-toggle="collapse">
+                        <i data-feather="database"></i>
+                        <span> Master Data </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="sidebarBulanan">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="{{route('admin.user.index')}}" class="tp-link">User</a>
+                            </li>
+                        </ul>
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="{{route('admin.tenant.index')}}" class="tp-link">Tenant</a>
+                            </li>
+                        </ul>
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="{{route('admin.block-user.index')}}" class="tp-link">Blocking</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 
             </ul>
         </div>

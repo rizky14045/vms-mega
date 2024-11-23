@@ -23,7 +23,7 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
-                <form action="{{route('admin.user-register.store')}}" method="POST">
+                <form action="{{route('admin.user-register.store')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <h3> A . Data Visitor </h3>
                     <div class="form-group pb-3">
@@ -34,13 +34,40 @@
                         <label class="form-label" for="text-id">No KTP</label>
                         <input type="text" required class="form-control mb-0" id="text-id" placeholder="Masukan No KTP" name="identity_number">
                     </div>
-                    <div class="form-group pb-3">
-                        <label class="form-label" for="text-id">Perusahaan / Unit Kerja</label>
-                        <input type="text" required class="form-control mb-0" id="text-id" placeholder="Masukan Perusahaan / Unit Kerja" name="company">
-                    </div>
-                    <div class="form-group pb-3">
-                        <label class="form-label" for="text-id">Alamat Perusahaan</label>
-                        <input type="text" required class="form-control mb-0" id="text-id" placeholder="Masukan Alamat Perusahaan" name="company_address">
+                    <label class="form-label" for="email-id">Jenis Perusahaan</label>
+                        <div class="checkbox-field d-flex gap-3 pb-3">
+                            <div class="form-check">
+                                <input class="form-check-input tenant_check" type="radio" name="visitor_type" id="tenant-type" checked="" value="tenant">
+                                <label class="form-check-label" for="tenant-type">
+                                    Tenant
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input tenant_check" type="radio" name="visitor_type" id="vendor-type" value="vendor">
+                                <label class="form-check-label" for="vendor-type">
+                                    Vendor Luar
+                                </label>
+                            </div>
+                        </div>
+
+                    <div class="mb-3 tenant-type">
+                        <label for="example-select" class="form-label">Tenant</label>
+                        <select class="form-select select-2" id="example-select" name="tenant_id">
+                            <option value="">Pilih Tenant</option>
+                            @foreach ($tenants as $tenant)
+                                <option value="{{$tenant->id}}">{{$tenant->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>    
+                    <div class="vendor-type" style="display: none">                 
+                        <div class="form-group pb-3">
+                            <label class="form-label" for="text-id">Perusahaan / Unit Kerja</label>
+                            <input type="text" class="form-control mb-0" id="text-id" placeholder="Masukan Perusahaan / Unit Kerja" name="vendor_name">
+                        </div>
+                        <div class="form-group pb-3">
+                            <label class="form-label" for="text-id">Alamat Perusahaan</label>
+                            <input type="text" class="form-control mb-0" id="text-id" placeholder="Masukan Alamat Perusahaan" name="vendor_address">
+                        </div>
                     </div>
                     <div class="form-group pb-3">
                         <label class="form-label" for="email-id">Email</label>
@@ -54,15 +81,29 @@
                         <label class="form-label" for="text-id">No. Handphone</label>
                         <input type="text" required class="form-control mb-0" id="text-id" placeholder="Masukan Nomor Handphone" name="phone_number">
                     </div>
-                    <div class="mb-3">
-                        <label for="example-select" class="form-label">Referensi</label>
-                        <select class="form-select" id="example-select" name="reference" required>
-                            <option value="">Pilih Referensi</option>
-                            <option>Memo Dinas</option>
-                            <option>Email</option>
-                            <option>Surat Perintah Kerja (SPK)*</option>
-                        </select>
+                    <div class="reference-input row">
+                        <div class="mb-3 col-md-6">
+                            <label for="example-select" class="form-label">Referensi</label>
+                            <select class="form-select" id="example-select" name="reference" required>
+                                <option value="">Pilih Referensi</option>
+                                <option value="memo">Memo Dinas</option>
+                                <option value="email">Email</option>
+                                <option value="spk">Surat Perintah Kerja (SPK)*</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label for="example-select" class="form-label">Attachment Referensi</label>
+                            <input type="file" class="form-control mb-0" name="attachment_reference" accept=".pdf,.jpg,.jpeg,.png">
+                        </div>
                     </div>
+                    <div class="mb-3 category-type col-md-6">
+                        <label for="example-select" class="form-label">Kategori Registrasi</label>
+                        <select class="form-select" id="example-select" name="category" required>
+                            <option value="">Pilih Kategori Registrasi</option>
+                            <option value="terjadwal">Terjadwal</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>   
                     <div class="add-person">
                         <div class="add-person-header d-flex align gap-3">
                             <h6 class="page-title my-auto">Nama Visitor</h6>
@@ -90,6 +131,10 @@
                     <hr>
                     <h3> B . Data Area </h3>
                     <div class="form-group pb-3">
+                        <div class="form-group pb-3 col-md-6">
+                            <label class="form-label" for="text-id">Tanggal Visit</label>
+                            <input type="date" required class="form-control mb-0" name="visit_date">
+                        </div>
                         <label class="form-label" for="email-id">Area yang Dituju</label>
                         <div class="checkbox-field d-flex gap-3">
                             <div class="form-check">
@@ -99,13 +144,14 @@
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="area" id="data-center-area" value="Data Center Area" checked="">
+                                <input class="form-check-input" type="radio" name="area" id="data-center-area" value="Data Center Area">
                                 <label class="form-check-label" for="data-center-area">
                                     Data Center Area
                                 </label>
                             </div>
                         </div>
                     </div>
+                   
                     <div class="form-group pb-3">
                         <label class="form-label" for="text-id">Nama Ruangan</label>
                         <input type="text" required class="form-control mb-0" id="text-id" placeholder="Masukan Nama Ruangan" name="room_name">
@@ -130,12 +176,16 @@
                                 </label>
                             </div>
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="1" id="check-other" name="other">
+                                <input class="form-check-input check-other" type="checkbox" value="1" id="check-other" name="other">
                                 <label class="form-check-label" for="check-other">
                                     Lainnya
                                 </label>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group pb-3 col-md-6 other-text" style="display:none;">
+                        <label class="form-label" for="email-id">Lainnya</label>
+                        <input type="text" class="form-control mb-0" id="text-id" placeholder="Masukan Peralatan Lainnya" name="other_text">
                     </div>
                     <hr>
                     <input type="hidden" name="key" id="" value="{{$key}}">
@@ -154,33 +204,39 @@
                     </div>
                     <div class="form-group pb-3">
                         <label class="form-label" for="text-id">No. Telepon Kantor</label>
-                        <input type="text" required class="form-control mb-0" id="text-id" placeholder="Masukan Alamat Perusahaan" name="personal_office_number">
+                        <input type="text" required class="form-control mb-0" id="text-id" placeholder="Masukan Nomor Telepon" name="personal_office_number">
                     </div>
                     <div class="form-group pb-3">
                         <label class="form-label" for="text-id">No. Handphone</label>
                         <input type="text" required class="form-control mb-0" id="text-id" placeholder="Masukan No. Handphone" name="personal_phone_number">
                     </div>
-                    <div class="form-group pb-3">
-                        <label class="form-label" for="email-id">Persetujuan</label>
-                        <div class="checkbox-field d-flex gap-3">
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="1" id="check-onsite" name="onsite_check">
-                                <label class="form-check-label" for="check-onsite">
-                                    Onsite
-                                </label>
+                    <div class="accept-form row">
+                        <div class="agreement-type col-md-5">      
+                            <label class="form-label" for="email-id">Persetujuan</label>
+                            <div class="checkbox-field d-flex gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="agreement" id="onsite-agreement" value="onsite" checked="">
+                                    <label class="form-check-label" for="onsite-agreement">
+                                        Onsite
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="agreement" id="email-agreement" value="email">
+                                    <label class="form-check-label" for="email-agreement">
+                                        Email
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="agreement" id="call-agreement" value="call">
+                                    <label class="form-check-label" for="call-agreement">
+                                        On Call ( Emergency Only )
+                                    </label>
+                                </div>
                             </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="1" id="check-email" name="email_check">
-                                <label class="form-check-label" for="check-email">
-                                    Email
-                                </label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="1" id="check-call" name="oncall_check">
-                                <label class="form-check-label" for="check-call">
-                                    On Call ( Emergency Only )
-                                </label>
-                            </div>
+                        </div>
+                        <div class="mb-3 col-md-3">
+                            <label for="example-select" class="form-label">Attachment Persetujuan</label>
+                            <input type="file" class="form-control mb-0" name="attachment_agreement" accept=".pdf,.jpg,.jpeg,.png">
                         </div>
                     </div>
                     
@@ -190,6 +246,8 @@
                     </div>
                    
                     <div class="text-center pb-3">
+                        <a href="{{route('admin.user-register.index')}}" class="btn btn-danger">Back</a>
+
                         <button type="submit" class="btn btn-success">Submit</button>
                     </div>
                 </form>
@@ -285,6 +343,35 @@
             })
     
     }
+</script>
+<script>
+    $('.tenant_check').on('change', function() {
+        const value = $(this).val() // Dapatkan nilai checkbox
+
+        console.log(value)
+
+        if (value == 'tenant') {
+
+            $('.tenant-type').show()
+            $('.vendor-type').hide()
+            
+        }else{
+            $('.tenant-type').hide()
+            $('.vendor-type').show()
+        }
+    });
+    $('.check-other').on('change', function() {
+        const value = $(this).is(':checked')// Dapatkan nilai checkbox
+
+        console.log(value)
+
+        if (value == true) {
+            $('.other-text').show()
+            
+        }else{
+            $('.other-text').hide()
+        }
+    });
 </script>
 @endsection
 

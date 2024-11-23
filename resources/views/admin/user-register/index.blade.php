@@ -24,17 +24,40 @@
 <div class="row">
     <div class="col-xl-12">
         <div class="card">
-            <div class="d-flex justify-content-end pe-3 pt-3">
-                <a href="{{route('admin.user-register.create')}}" class="btn btn-success">Tambah Data</a>
-            </div>
+            <div class="d-flex justify-content-between align-items-center px-3 pt-3">
+                <div class="search-from">
+                    <form action="{{route('admin.user-register.index')}}" method="GET">
+                        <div class="d-flex align-items-end gap-2">
+                            <div class="form-group">
+                                <label for="range_date" class="form-label">Tanggal Visit</label>
+                                <input type="text" id="range_date" name="range_date" class="form-control" value="{{$range_date}}">
+                            </div>
+                            <button type="submit" class="btn btn-info">Cari Data</button>
+                        </div>
+                    </form>
+                </div>
+                <a href="{{ route('admin.user-register.create') }}" class="btn btn-success">Tambah Data</a>
+            </div>            
             <div class="card-body">
+                @if(session('error'))
+                    <div class="alert alert-danger">
+                        <h5>Ada user yang telah di block</h5>
+                        <ol>
+                            @foreach(session('error') as $item)
+                                <li>{{ $item['name'] }} - {{ $item['identity_number'] }}</li>
+                            @endforeach
+                        </ol>
+                    </div>
+                @endif
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped mb-0">
+                    <table class="table table-bordered table-striped mb-3">
                         <thead>
                             <tr>
                                 <th scope="col" class="text-nowrap">No</th>
                                 <th scope="col" class="text-nowrap">Kode Registrasi</th>
                                 <th scope="col" class="text-nowrap">QrCode</th>
+                                <th scope="col" class="text-nowrap">Kategori Registrasi</th>
+                                <th scope="col" class="text-nowrap">Tanggal Visit</th>
                                 <th scope="col" class="text-nowrap">Nama Lengkap</th>
                                 <th scope="col" class="text-nowrap">Nomor KTP</th>
                                 <th scope="col" class="text-nowrap">Perusahaan / Unit Kerja</th>
@@ -54,14 +77,16 @@
                                 <td class="text-nowrap">{{$loop->iteration}}</td>
                                 <td class="text-nowrap">{{$register->register_code}}</td>
                                 <td class="text-nowrap">
-                                    @if ($register->rangking == 2)
+                                    @if ($register->rangking == 3)
                                         {!!$register->qrcode!!}     
                                     @endif
                                 </td>
+                                <td class="text-nowrap text-capitalize">{{$register->category}}</td>
+                                <td class="text-nowrap text-capitalize">{{ date('Y-m-d', strtotime($register->visit_date)) }}</td>
                                 <td class="text-nowrap">{{$register->name}}</td>
                                 <td class="text-nowrap">{{$register->identity_number}}</td>
-                                <td class="text-nowrap">{{$register->company}}</td>
-                                <td class="text-nowrap">{{$register->company_address}}</td>
+                                <td class="text-nowrap">{{$register->visitor_type == 'tenant' ? $register->tenant->name : $register->vendor_name}}</td>
+                                <td class="text-nowrap">{{$register->visitor_type == 'tenant' ? $register->tenant->address : $register->vendor_address}}</td>
                                 <td class="text-nowrap">{{$register->email}}</td>
                                 <td class="text-nowrap">{{$register->office_number}}</td>
                                 <td class="text-nowrap">{{$register->phone_number}}</td>
@@ -71,19 +96,13 @@
                     
                                 <td class="text-nowrap">
                                     <a href="{{route('admin.user-register.detail',['id'=>$register->id])}}" class="btn btn-warning btn-sm">Detail</a>
-                                    @if ($register->rangking == 1) 
-                                        <form action="{{route('admin.user-register.approve',['id'=>$register->id])}}" method="POST" class="d-inline delete-form" id="delete-form">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="button" class="btn btn-success btn-sm" onclick="deleteItem(this)">Setujui</button>
-                                        </form>
-                                    @endif
+                                    <a href="{{route('admin.user-register.reschedule',['id'=>$register->id])}}" class="btn btn-primary btn-sm">Reschedule</a>
                                 </td>
                             </tr>
                             @endforeach
-                           
                         </tbody>
                     </table>
+                    {{$registers->links()}}
                 </div>
          
             </div> <!-- end card body -->

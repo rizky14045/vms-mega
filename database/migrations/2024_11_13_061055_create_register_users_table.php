@@ -35,17 +35,21 @@ class CreateRegisterUsersTable extends Migration
             $table->boolean('handphone')->default(false);
             $table->boolean('other')->default(false);
             $table->string('other_text')->nullable();
-            $table->string('category')->nullable();
+            $table->string('category')->nullable(); 
             $table->date('visit_date')->nullable();
+            $table->boolean('check_in_status')->default(false);
             $table->timestamp('check_in')->nullable();
             $table->string('check_in_image')->nullable();
             $table->string('check_in_identity')->nullable();
+            $table->boolean('check_out_status')->default(false);
             $table->timestamp('check_out')->nullable();
             $table->string('check_out_image')->nullable();
             $table->string('check_out_identity')->nullable();
             $table->integer('rangking')->nullable();
             $table->string('status')->nullable();
             $table->string('key')->nullable();
+            $table->integer('check_in_by')->nullable();
+            $table->integer('check_out_by')->nullable();
             $table->timestamps();
         });
     }

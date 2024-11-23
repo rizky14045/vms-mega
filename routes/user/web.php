@@ -19,6 +19,3 @@ use App\Http\Controllers\User\PraqualificationController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', [HomeUserController::class, 'index'])->name('user.index');
-Route::get('/detail/{uuid}', [HomeUserController::class, 'detail'])->name('user.detail');
-Route::post('/store', [HomeUserController::class, 'store'])->name('user.store');
