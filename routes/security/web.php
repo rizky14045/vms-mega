@@ -31,6 +31,8 @@ Route::prefix('security')->group(function () {
         Route::patch('/reschedule/{id}', [UserRegisterController::class, 'updateReschedule'])->name('security.user-register.updateReschedule');
         Route::get('/edit', [UserRegisterController::class, 'edit'])->name('security.user-register.edit');
         Route::get('/qrcode/{uuid}', [UserRegisterController::class, 'qrcode'])->name('security.user-register.qrcode');
+        Route::patch('/checkin/{uuid}', [UserRegisterController::class, 'checkIn'])->name('security.user-register.checkIn');
+        Route::patch('/checkout/{uuid}', [UserRegisterController::class, 'checkOut'])->name('security.user-register.checkOut');
     });
     
 });

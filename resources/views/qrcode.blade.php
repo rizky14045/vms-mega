@@ -72,6 +72,14 @@
                                         <img src="{{asset('logo.png')}}" alt="logo-dark" class="mx-auto" height="50" />
                                     </div>
                                     <h5 class="text-center">Detail Visitor</h5>
+                                    @if ( $register->visit_date != date('Y-m-d'))
+                                        <div class="alert alert-danger">
+                                            <div class="d-flex justify-content-center">
+                                                User bisa masuk pada tanggal {{$register->visit_date}}
+                                            </div>
+                                        </div>
+                                    @endif
+                                   
                                     <div class="d-flex justify-content-center align-item-center">
                                         <!--Content table-->
                                         <table class="w-50-mobile w-50">
@@ -87,6 +95,10 @@
                                               <tr>
                                                   <th class="pe-2 text-nowrap ">Nama</th> <!-- Adjust spacing with pe-* class -->
                                                   <td class="text-nowrap"> : {{$register->name}}</td>
+                                              </tr>
+                                              <tr>
+                                                  <th class="pe-2 text-nowrap ">Tanggal Visit</th> <!-- Adjust spacing with pe-* class -->
+                                                  <td class="text-nowrap"> : {{$register->visit_date}}</td>
                                               </tr>
                                               <tr>
                                                   <th class="pe-2 text-nowrap ">Nomor KTP</th> <!-- Adjust spacing with pe-* class -->
@@ -162,6 +174,18 @@
                                                   <th class="pe-2 text-nowrap ">Status</th> <!-- Adjust spacing with pe-* class -->
                                                   <td class="text-nowrap"> : {{$register->status}}</td>
                                               </tr>
+                                              @if ($register->check_in)
+                                                <tr>
+                                                    <th class="pe-2 text-nowrap ">Checkin</th> <!-- Adjust spacing with pe-* class -->
+                                                    <td class="text-nowrap"> : {{$register->check_in}}</td>
+                                                </tr>
+                                              @endif
+                                              @if ($register->check_out)
+                                                <tr>
+                                                    <th class="pe-2 text-nowrap ">Checkout</th> <!-- Adjust spacing with pe-* class -->
+                                                    <td class="text-nowrap"> : {{$register->check_out}}</td>
+                                                </tr>
+                                              @endif
                                           </table>
                                           
                                             </div>
@@ -198,8 +222,44 @@
                                             </table>
                                         </div>
                                         <div class="d-flex justify-content-center gap-2 mt-5">
-                                            <a href="#" class="btn btn-success">Check In</a>
-                                            <a href="#" class="btn btn-warning">Check Out</a>
+                                            @if (Auth::check() && Auth::user()->role == 'petugas' && $register->visit_date == date('Y-m-d'))
+                                                
+                                                @if ($register->check_in_status == 1)
+                                                    <form action="{{route('security.user-register.checkIn',['uuid' => $register->uuid])}}" method="post" enctype="multipart/form-data" class="approve-checkin">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <div class="form-group pb-3">
+                                                            <label class="form-label" for="image-id">Bukti Foto</label>
+                                                            <input type="file" required class="form-control mb-0" id="image-id" name="check_in_image" capture="environment">
+                                                        </div>
+                                                        <div class="form-group pb-3">
+                                                            <label class="form-label" for="image-id">Foto KTP</label>
+                                                            <input type="file" required class="form-control mb-0" id="image-id" name="check_in_identity" capture="environment">
+                                                        </div>
+                                                        <div class="d-flex justify-content-center">
+                                                            <button type="button" class="btn btn-success" onclick="approveCheckIn(this)">Checkin</button>
+                                                        </div>
+                                                    </form>
+                                                @endif
+                                                @if ($register->check_out_status == 1)
+                                                    <form action="{{route('security.user-register.checkOut',['uuid' => $register->uuid])}}" method="post" enctype="multipart/form-data" class="approve-checkout">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <div class="form-group pb-3">
+                                                            <label class="form-label" for="image-id">Bukti Foto</label>
+                                                            <input type="file" required class="form-control mb-0" id="image-id" name="check_out_image" capture="environment">
+                                                        </div>
+                                                        <div class="form-group pb-3">
+                                                            <label class="form-label" for="image-id">Foto KTP</label>
+                                                            <input type="file" required class="form-control mb-0" id="image-id" name="check_out_identity" capture="environment">
+                                                        </div>
+                                                        <div class="d-flex justify-content-center">
+                                                            <button type="button" class="btn btn-warning" onclick="approveCheckOut(this)">Checkout</button>
+                                                        </div>
+                                                    </form>
+                                                @endif
+                                            @endif
+
     
                                         </div>
                                     </div>       
@@ -224,6 +284,43 @@
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <!-- App js-->
         <script src="{{asset('assets/js/app.js')}}"></script>
-        
+        <script type="text/javascript" src="{{asset('assets/swal/sweetalert2.all.min.js')}}"></script>
+        <script>
+            function approveCheckIn(e){
+                      // console.log(form);
+                      Swal.fire({
+                          title: 'Checkin Data',
+                          text: "Apakah kamu ingin melakukan check in?",
+                          icon: 'warning',
+                          showCancelButton: true,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Iya !'
+                      }).then((result) => {
+                          if (result.isConfirmed) {
+                              $(e).parent().parent().submit();
+                          }
+                      })
+                  }
+            function approveCheckOut(e){
+                      // console.log(form);
+                      Swal.fire({
+                          title: 'Checkout Data',
+                          text: "Apakah kamu ingin melakukan check out?",
+                          icon: 'warning',
+                          showCancelButton: true,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Iya !'
+                      }).then((result) => {
+                          if (result.isConfirmed) {
+                              $(e).parent().parent().submit();
+                          }
+                      })
+                  }
+          
+          </script>
+        @include('sweetalert::alert')
+
     </body>
 </html>

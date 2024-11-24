@@ -27,97 +27,108 @@
                 <div class="d-flex justify-content-center align-item-center">
                     <!--Content table-->
                     <table class="w-50-mobile w-50">
-                     
-                          <tr>
-                              <th class="pe-2 text-nowrap ">Kode Registrasi</th> <!-- Adjust spacing with pe-* class -->
-                              <td class="text-nowrap"> : {{$register->register_code}}</td>
-                          </tr>
-                          <tr>
-                              <th class="pe-2 text-nowrap ">Kategori</th> <!-- Adjust spacing with pe-* class -->
-                              <td class="text-nowrap text-capitalize"> : {{$register->category}}</td>
-                          </tr>
-                          <tr>
-                              <th class="pe-2 text-nowrap ">Nama</th> <!-- Adjust spacing with pe-* class -->
-                              <td class="text-nowrap"> : {{$register->name}}</td>
-                          </tr>
-                          <tr>
-                              <th class="pe-2 text-nowrap ">Nomor KTP</th> <!-- Adjust spacing with pe-* class -->
-                              <td class="text-nowrap"> : {{$register->identity_number}}</td>
-                          </tr>
-                          <tr>
-                              <th class="pe-2 text-nowrap ">Email</th> <!-- Adjust spacing with pe-* class -->
-                              <td class="text-nowrap"> : {{$register->email}}</td>
-                          </tr>
-                          <tr>
-                              <th class="pe-2 text-nowrap ">Nomor Kantor</th> <!-- Adjust spacing with pe-* class -->
-                              <td class="text-nowrap"> : {{$register->office_number}}</td>
-                          </tr>
-                          <tr>
-                              <th class="pe-2 text-nowrap ">Nomor Telepon</th> <!-- Adjust spacing with pe-* class -->
-                              <td class="text-nowrap"> : {{$register->phone_number}}</td>
-                          </tr>
-                          <tr>
-                              <th class="pe-2 text-nowrap ">Perusahaan</th> <!-- Adjust spacing with pe-* class -->
-                              @if ($register->visitor_type == 'tenant')
-                              <td class="text-nowrap"> : {{$register->tenant->name ?? ''}}</td>
-                              
-                              @else
-                              
-                              <td class="text-nowrap"> : {{$register->vendor_name}}</td>
-                              @endif
-                          </tr>
-                          <tr>
-                              <th class="pe-2 text-nowrap ">Referensi</th> <!-- Adjust spacing with pe-* class -->
-                              <td class="text-nowrap"> : {{$register->reference}}
-                                @if ($register->attachment_reference)
-                                    <a href="{{asset('uploads/attachment_reference/'.$register->attachment_reference)}}" class="btn btn-sm btn-success ms-3" download="">Download</a>
-                                @endif
-                                </td>
-                          </tr>
-                          <tr>
-                              <th class="pe-2 text-nowrap ">Area yang Dituju</th> <!-- Adjust spacing with pe-* class -->
-                              <td class="text-nowrap"> : {{$register->area}}</td>
-                          </tr>
-                          <tr>
-                              <th class="pe-2 text-nowrap ">Nama Ruangan</th> <!-- Adjust spacing with pe-* class -->
-                              <td class="text-nowrap"> : {{$register->room_name}}</td>
-                          </tr>
-                          <tr>
-                              <th class="pe-2 text-nowrap ">Keperluan</th> <!-- Adjust spacing with pe-* class -->
-                              <td class="text-nowrap"> : {{$register->necessary}}</td>
-                          </tr>
-                          <tr>
-                              <th class="pe-2 text-nowrap ">Peralatan</th> <!-- Adjust spacing with pe-* class -->
-                              <td class="text-nowrap">
-                                <ul>
-                                    @if ($register->laptop == 1)
-                                        <li>Laptop</li>
-                                    @endif
-                                    @if ($register->handphone == 1)
-                                        <li>Handphone</li>
-                                    @endif
-                                    @if ($register->other == 1)
-                                        <li>{{$register->other_text}}</li>
-                                    @endif
-                                </ul>
+                        <tr>
+                            <th class="pe-2 text-nowrap ">Kode Registrasi</th> <!-- Adjust spacing with pe-* class -->
+                            <td class="text-nowrap"> : {{$register->register_code}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pe-2 text-nowrap ">Kategori</th> <!-- Adjust spacing with pe-* class -->
+                            <td class="text-nowrap text-capitalize"> : {{$register->category}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pe-2 text-nowrap ">Nama</th> <!-- Adjust spacing with pe-* class -->
+                            <td class="text-nowrap"> : {{$register->name}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pe-2 text-nowrap ">Nomor KTP</th> <!-- Adjust spacing with pe-* class -->
+                            <td class="text-nowrap"> : {{$register->identity_number}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pe-2 text-nowrap ">Email</th> <!-- Adjust spacing with pe-* class -->
+                            <td class="text-nowrap"> : {{$register->email}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pe-2 text-nowrap ">Nomor Kantor</th> <!-- Adjust spacing with pe-* class -->
+                            <td class="text-nowrap"> : {{$register->office_number}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pe-2 text-nowrap ">Nomor Telepon</th> <!-- Adjust spacing with pe-* class -->
+                            <td class="text-nowrap"> : {{$register->phone_number}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pe-2 text-nowrap ">Perusahaan</th> <!-- Adjust spacing with pe-* class -->
+                            @if ($register->visitor_type == 'tenant')
+                            <td class="text-nowrap"> : {{$register->tenant->name ?? ''}}</td>
+                            
+                            @else
+                            
+                            <td class="text-nowrap"> : {{$register->vendor_name}}</td>
+                            @endif
+                        </tr>
+                        <tr>
+                            <th class="pe-2 text-nowrap ">Referensi</th> <!-- Adjust spacing with pe-* class -->
+                            <td class="text-nowrap"> : {{$register->reference}}
+                            @if ($register->attachment_reference)
+                                <a href="{{asset('uploads/attachment_reference/'.$register->attachment_reference)}}" class="btn btn-sm btn-success ms-3" download="">Download</a>
+                            @endif
                             </td>
-                          </tr>
-                          @if ($details->isNotEmpty())
-                              <tr>
-                                  <th class="pe-2 text-nowrap align-item-center">Orang</th> <!-- Adjust spacing with pe-* class -->
-                                  <td class="text-nowrap">
-                                      <ol class="me-5">
-                                          @foreach ($details as $detail)
-                                              <li>{{$detail->name}} - {{$detail->identity_number}} - {{$detail->phone_number}}</li>
-                                          @endforeach
-                                      </ol>
-                                  </td>
-                              </tr>
-                          @endif
-                          <tr>
-                              <th class="pe-2 text-nowrap ">Status</th> <!-- Adjust spacing with pe-* class -->
-                              <td class="text-nowrap"> : {{$register->status}}</td>
-                          </tr>
+                        </tr>
+                        <tr>
+                            <th class="pe-2 text-nowrap ">Area yang Dituju</th> <!-- Adjust spacing with pe-* class -->
+                            <td class="text-nowrap"> : {{$register->area}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pe-2 text-nowrap ">Nama Ruangan</th> <!-- Adjust spacing with pe-* class -->
+                            <td class="text-nowrap"> : {{$register->room_name}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pe-2 text-nowrap ">Keperluan</th> <!-- Adjust spacing with pe-* class -->
+                            <td class="text-nowrap"> : {{$register->necessary}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pe-2 text-nowrap ">Peralatan</th> <!-- Adjust spacing with pe-* class -->
+                            <td class="text-nowrap">
+                            <ul>
+                                @if ($register->laptop == 1)
+                                    <li>Laptop</li>
+                                @endif
+                                @if ($register->handphone == 1)
+                                    <li>Handphone</li>
+                                @endif
+                                @if ($register->other == 1)
+                                    <li>{{$register->other_text}}</li>
+                                @endif
+                            </ul>
+                        </td>
+                        </tr>
+                        @if ($details->isNotEmpty())
+                            <tr>
+                                <th class="pe-2 text-nowrap align-item-center">Orang</th> <!-- Adjust spacing with pe-* class -->
+                                <td class="text-nowrap">
+                                    <ol class="me-5">
+                                        @foreach ($details as $detail)
+                                            <li>{{$detail->name}} - {{$detail->identity_number}} - {{$detail->phone_number}}</li>
+                                        @endforeach
+                                    </ol>
+                                </td>
+                            </tr>
+                        @endif
+                        <tr>
+                            <th class="pe-2 text-nowrap ">Status</th> <!-- Adjust spacing with pe-* class -->
+                            <td class="text-nowrap"> : {{$register->status}}</td>
+                        </tr>
+                        @if ($register->check_in)
+                            <tr>
+                                <th class="pe-2 text-nowrap ">Checkin</th> <!-- Adjust spacing with pe-* class -->
+                                <td class="text-nowrap"> : {{$register->check_in}}</td>
+                            </tr>
+                        @endif
+                        @if ($register->check_out)
+                            <tr>
+                                <th class="pe-2 text-nowrap ">Checkout</th> <!-- Adjust spacing with pe-* class -->
+                                <td class="text-nowrap"> : {{$register->check_out}}</td>
+                            </tr>
+                        @endif
                       </table>
                       
                         </div>

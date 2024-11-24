@@ -14,6 +14,7 @@ use App\Models\DetailVisitor;
 use App\Models\PersonalRegister;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -232,6 +233,94 @@ class UserRegisterController extends Controller
             DB::commit();
             Alert::success('Reschedule Berhasil', 'Data Berhasil direschedule!');
             return redirect()->route('security.user-register.index');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            throw $th;
+        }
+    }
+    public function checkIn(Request $request,$uuid){
+
+        try {
+            DB::beginTransaction();
+
+            $checkOutImage = '';
+            $checkOutIdentity = '';
+
+            if($request->hasFile('check_in_image'))
+            {
+                $file= $request->file('check_in_image');
+                $image_name = 'check-in-image-' . time() .'.'. $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/check_in_image/'),$image_name);   
+                $checkInImage = $image_name;
+            }
+
+            if($request->hasFile('check_in_identity'))
+            {
+                $file= $request->file('check_in_identity');
+                $identity_image = 'check-in-identity-' . time() .'.'. $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/check_in_identity/'),$identity_image); 
+                $checkOutIdentity = $identity_image;
+            }
+
+          
+            $checkIn = RegisterUser::where('uuid', $uuid)->first();
+
+            $checkIn->check_in_status = false;
+            $checkIn->check_in = now();
+            $checkIn->check_in_image = $checkInImage;
+            $checkIn->check_in_identity = $checkOutIdentity;
+            $checkIn->check_out_status = true;
+            $checkIn->check_in_by = Auth::user()->id;
+            $checkIn->save();
+
+            DB::commit();
+            Alert::success('Checkin Berhasil', 'User berhasil masuk!');
+            return redirect()->back();
+
+        } catch (\Throwable $th) {
+            DB::rollback();
+            throw $th;
+        }
+    }
+
+    public function checkOut(Request $request,$uuid){
+
+        try {
+            DB::beginTransaction();
+
+            $checkOutImage = '';
+            $checkOutIdentity = '';
+
+            if($request->hasFile('check_out_image'))
+            {
+                $file= $request->file('check_out_image');
+                $image_name = 'check-out-image-' . time() .'.'. $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/check_out_image/'),$image_name);   
+                $checkOutImage = $image_name;
+            }
+
+            if($request->hasFile('check_out_identity'))
+            {
+                $file= $request->file('check_out_identity');
+                $identity_image = 'check-out-identity-' . time() .'.'. $file->getClientOriginalExtension();
+                $file->move(public_path('uploads/check_out_identity/'),$identity_image); 
+                $checkOutIdentity = $identity_image;
+            }
+
+          
+            $checkOut = RegisterUser::where('uuid', $uuid)->first();
+
+            $checkOut->check_out = now();
+            $checkOut->check_out_image = $checkOutImage;
+            $checkOut->check_out_identity = $checkOutIdentity;    
+            $checkOut->check_out_status = false;
+            $checkOut->check_out_by = Auth::user()->id;
+            $checkOut->save();
+
+            DB::commit();
+            Alert::success('Checkout Berhasil', 'User berhasil keluar!');
+            return redirect()->back();
+
         } catch (\Throwable $th) {
             DB::rollback();
             throw $th;
