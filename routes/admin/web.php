@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\TenantController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\ListWorkController;
@@ -28,6 +29,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/change-password', [AuthController::class, 'changePassword'])->name('admin.changePassword');
     Route::patch('/update-password', [AuthController::class, 'updatePassword'])->name('admin.updatePassword');
     Route::get('/home', [DashboardController::class, 'index'])->name('admin.home.index');
+    Route::get('/report', [ReportController::class, 'index'])->name('admin.report.index');
     
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('admin.user.index');

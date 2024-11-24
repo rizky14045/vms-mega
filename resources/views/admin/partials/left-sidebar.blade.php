@@ -60,6 +60,12 @@
                         </ul>
                     </div>
                 </li>
+                <li>
+                    <a href="{{route('admin.report.index')}}" class="tp-link">
+                        <i data-feather="file-text"></i>
+                        <span> Laporan </span>
+                    </a>
+                </li>
                 
             </ul>
         </div>

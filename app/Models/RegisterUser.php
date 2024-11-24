@@ -20,4 +20,12 @@ class RegisterUser extends Model
     {
         return $this->hasOne(Tenant::class, 'id', 'tenant_id');
     }
+    public function checkInBy()
+    {
+        return $this->hasOne(User::class, 'id', 'check_in_by');
+    }
+    public function checkOutBy()
+    {
+        return $this->hasOne(User::class, 'id', 'check_out_by');
+    }
 }
