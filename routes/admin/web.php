@@ -25,7 +25,7 @@ use App\Http\Controllers\Admin\PraqualificationController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware(['auth','admin'])->group(function () {
     Route::get('/change-password', [AuthController::class, 'changePassword'])->name('admin.changePassword');
     Route::patch('/update-password', [AuthController::class, 'updatePassword'])->name('admin.updatePassword');
     Route::get('/home', [DashboardController::class, 'index'])->name('admin.home.index');

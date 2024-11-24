@@ -39,9 +39,20 @@ class HomeController extends Controller
         if( Hash::check($request->password,$user->password) ){
 
             auth()->login($user);
-
             Alert::success('Login Berhasil', 'User berhasil login!');
-            return redirect()->route('admin.home.index');
+
+            if($user->role == 'admin'){
+                return redirect()->route('admin.home.index');
+            }
+            if($user->role == 'supervisor'){
+                return redirect()->route('supervisor.home.index');
+            }
+            if($user->role == 'manajer'){
+                return redirect()->route('manager.home.index');
+            }
+            if($user->role == 'petugas'){
+                return redirect()->route('security.home.index');
+            }
 
         }else{
             

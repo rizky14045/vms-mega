@@ -29,7 +29,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped mb-0">
+                    <table class="table table-bordered table-striped mb-3">
                         <thead>
                             <tr>
                                 <th scope="col" class="text-nowrap">No</th>
@@ -57,6 +57,7 @@
                            
                         </tbody>
                     </table>
+                    {{$blocks->links()}}
                 </div>
          
             </div> <!-- end card body -->

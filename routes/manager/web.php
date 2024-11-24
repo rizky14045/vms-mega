@@ -16,7 +16,7 @@ use App\Http\Controllers\Manager\UserRegisterController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::prefix('manager')->group(function () {
+Route::prefix('manager')->middleware(['auth','manager'])->group(function () {
     Route::get('/change-password', [AuthController::class, 'changePassword'])->name('manager.changePassword');
     Route::patch('/update-password', [AuthController::class, 'updatePassword'])->name('manager.updatePassword');
     Route::get('/home', [DashboardController::class, 'index'])->name('manager.home.index');

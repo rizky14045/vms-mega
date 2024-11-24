@@ -17,7 +17,7 @@ class TenantController extends Controller
      */
     public function index()
     {
-        $data['tenants'] = Tenant::all();
+        $data['tenants'] = Tenant::paginate(25);
         return view('admin.tenant.index',$data);
     }
 

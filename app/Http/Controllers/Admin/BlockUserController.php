@@ -17,7 +17,7 @@ class BlockUserController extends Controller
      */
     public function index()
     {
-        $data['blocks'] = BlockUser::all();
+        $data['blocks'] = BlockUser::paginate(25);
         return view('admin.block-user.index',$data);
     }
 
