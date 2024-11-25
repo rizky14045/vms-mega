@@ -19,6 +19,7 @@ Route::get('/', [HomeController::class, 'index'])->name('login')->middleware('gu
 Route::get('/qrcode/{uuid}', [HomeController::class, 'qrcode'])->name('qrcode');
 Route::post('/login', [HomeController::class, 'login'])->name('auth')->middleware('guest');
 Route::post('/logout', [HomeController::class, 'logout'])->name('logout');
+Route::get('/email', [HomeController::class, 'testEmail']);
 require_once('user/web.php');
 require_once('admin/web.php');
 require_once('supervisor/web.php');

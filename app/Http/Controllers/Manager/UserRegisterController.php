@@ -7,6 +7,7 @@ use Ramsey\Uuid\Uuid;
 use App\Models\Tenant;
 use App\Models\Schedule;
 use App\Models\BlockUser;
+use App\Mail\SuccessEmail;
 use App\Models\Reschedule;
 use App\Models\RegisterUser;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use App\Models\DetailVisitor;
 use App\Models\PersonalRegister;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -51,6 +53,10 @@ class UserRegisterController extends Controller
         $register->status = 'Sudah Disetujui' ;
         $register->rangking = 3;
         $register->save();
+
+        $qrcode = QrCode::size(100)->generate(route('qrcode',['uuid' => $register->uuid]));
+        $details = DetailVisitor::where('register_user_id', $register->id)->get();
+        Mail::to($register->email)->send(new SuccessEmail($register,$details,$qrcode));
         
         Alert::success('Approve Berhasil', 'Registrasi user berhasil di setujui!');
         return redirect()->back();

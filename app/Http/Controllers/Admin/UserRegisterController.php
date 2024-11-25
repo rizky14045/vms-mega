@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Carbon\Carbon;
+use App\Models\User;
 use Ramsey\Uuid\Uuid;
 use App\Models\Tenant;
 use App\Models\Schedule;
@@ -10,10 +11,13 @@ use App\Models\BlockUser;
 use App\Models\Reschedule;
 use App\Models\RegisterUser;
 use Illuminate\Http\Request;
+use App\Mail\RescheduleEmail;
+use App\Mail\SupervisorEmail;
 use App\Models\DetailVisitor;
 use App\Models\PersonalRegister;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -189,7 +193,15 @@ class UserRegisterController extends Controller
                 };
             }
 
+          
+
             DB::commit();
+            $supervisors = User::where('role','supervisor')->pluck('email');
+            $details = DetailVisitor::where('register_user_id', $register->id)->get();
+            if ($supervisors) {
+                Mail::to($supervisors)->send(new SupervisorEmail($register,$details));
+            }
+
             Alert::success('Tambah Berhasil', 'Registrasi user berhasil di dibuat!');
             return redirect()->route('admin.user-register.index');
         } catch (\Throwable $th) {
@@ -230,6 +242,11 @@ class UserRegisterController extends Controller
             $reschedule->visit_date = $request->reschedule_date;
             $reschedule->save();
 
+            $qrcode = QrCode::size(100)->generate(route('qrcode',['uuid' => $reschedule->uuid]));
+            $visit = $request->reschedule_date;
+            $details = DetailVisitor::where('register_user_id', $reschedule->id)->get();
+            Mail::to($reschedule->email)->send(new RescheduleEmail($reschedule,$details,$qrcode,$visit));
+            
             DB::commit();
             Alert::success('Reschedule Berhasil', 'Data Berhasil direschedule!');
             return redirect()->route('admin.user-register.index');

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class SupervisorEmail extends Mailable
+class SuccessEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,11 +18,13 @@ class SupervisorEmail extends Mailable
      */
     protected $register;
     protected $details;
+    protected $qrcode;
 
-    public function __construct($register,$details)
+    public function __construct($register,$details,$qrcode)
     {
         $this->register = $register;
         $this->details = $details;
+        $this->qrcode = $qrcode;
     }
 
 
@@ -35,7 +37,8 @@ class SupervisorEmail extends Mailable
     {
         $data['register'] = $this->register;
         $data['details'] = $this->details;
-        return $this->subject('Registrasi Visitor Baru')
-        ->view('email.supervisor',$data);
+        $data['qrcode'] = $this->qrcode;
+        return $this->subject('Registrasi Visitor Telah Disetujui')
+        ->view('email.success',$data);
     }
 }

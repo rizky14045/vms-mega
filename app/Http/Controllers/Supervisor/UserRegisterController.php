@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Supervisor;
 
 use Carbon\Carbon;
+use App\Models\User;
 use Ramsey\Uuid\Uuid;
 use App\Models\Tenant;
 use App\Models\Schedule;
 use App\Models\BlockUser;
+use App\Mail\ManagerEmail;
 use App\Models\Reschedule;
 use App\Models\RegisterUser;
 use Illuminate\Http\Request;
@@ -14,6 +16,7 @@ use App\Models\DetailVisitor;
 use App\Models\PersonalRegister;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -51,6 +54,19 @@ class UserRegisterController extends Controller
         $register->status = $register->category == 'urgent' ? 'Sudah Disetujui' : 'Menunggu Persetujuan Manajer';
         $register->rangking = $rangking;
         $register->save();
+
+        $managers = User::where('role','manajer')->pluck('email');
+        $details = DetailVisitor::where('register_user_id', $register->id)->get();
+        if ($rangking ==3){
+            $qrcode = QrCode::size(100)->generate(route('qrcode',['uuid' => $register->uuid]));
+            Mail::to($register->email)->send(new SuccessEmail($register,$details,$qrcode));
+        }else{
+            if ($managers) {
+                Mail::to($managers)->send(new ManagerEmail($register,$details));
+            }
+        }
+       
+        
         
         Alert::success('Approve Berhasil', 'Registrasi user berhasil di setujui!');
         return redirect()->back();

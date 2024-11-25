@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class SupervisorEmail extends Mailable
+class ManagerEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -36,6 +36,6 @@ class SupervisorEmail extends Mailable
         $data['register'] = $this->register;
         $data['details'] = $this->details;
         return $this->subject('Registrasi Visitor Baru')
-        ->view('email.supervisor',$data);
+        ->view('email.manager',$data);
     }
 }

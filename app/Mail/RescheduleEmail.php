@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class SupervisorEmail extends Mailable
+class RescheduleEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,11 +18,15 @@ class SupervisorEmail extends Mailable
      */
     protected $register;
     protected $details;
+    protected $qrcode;
+    protected $visit;
 
-    public function __construct($register,$details)
+    public function __construct($register,$details,$qrcode,$visit)
     {
         $this->register = $register;
         $this->details = $details;
+        $this->qrcode = $qrcode;
+        $this->visit = $visit;
     }
 
 
@@ -35,7 +39,9 @@ class SupervisorEmail extends Mailable
     {
         $data['register'] = $this->register;
         $data['details'] = $this->details;
-        return $this->subject('Registrasi Visitor Baru')
-        ->view('email.supervisor',$data);
+        $data['qrcode'] = $this->qrcode;
+        $data['visit'] = $this->visit;
+        return $this->subject('Tanggal Visit Registrasi Visitor Telah Diubah')
+        ->view('email.reschedule',$data);
     }
 }

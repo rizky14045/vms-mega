@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\RegisterUser;
 use Illuminate\Http\Request;
+use App\Mail\SupervisorEmail;
 use App\Models\DetailVisitor;
 use App\Models\PersonalRegister;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class HomeController extends Controller
@@ -84,5 +86,10 @@ class HomeController extends Controller
         $data['details'] = DetailVisitor::where('register_user_id', $register->id)->get();
         $data['personal'] = PersonalRegister::where('register_user_id', $data['register']->id)->first();
         return view('qrcode',$data);
+    }
+
+    public function testEmail(){
+        Mail::to('recipient@example.com')->send(new SupervisorEmail());
+        return 'ok';
     }
 }
