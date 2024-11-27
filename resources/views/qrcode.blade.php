@@ -231,10 +231,16 @@
                                                         <div class="form-group pb-3">
                                                             <label class="form-label" for="image-id">Bukti Foto</label>
                                                             <input type="file" required class="form-control mb-0" id="image-id" name="check_in_image" capture="environment">
+                                                            @if($errors->has('check_in_image'))
+                                                                <div class="error text-danger">{{ $errors->first('check_in_image') }}</div>
+                                                            @endif
                                                         </div>
                                                         <div class="form-group pb-3">
                                                             <label class="form-label" for="image-id">Foto KTP</label>
-                                                            <input type="file" required class="form-control mb-0" id="image-id" name="check_in_identity" capture="environment">
+                                                            <input type="file" required class="form-control mb-0"s id="image-id" name="check_in_identity" capture="environment">
+                                                            @if($errors->has('check_in_identity'))
+                                                                <div class="error text-danger">{{ $errors->first('check_in_identity') }}</div>
+                                                            @endif
                                                         </div>
                                                         <div class="d-flex justify-content-center">
                                                             <button type="button" class="btn btn-success" onclick="approveCheckIn(this)">Checkin</button>
@@ -248,10 +254,16 @@
                                                         <div class="form-group pb-3">
                                                             <label class="form-label" for="image-id">Bukti Foto</label>
                                                             <input type="file" required class="form-control mb-0" id="image-id" name="check_out_image" capture="environment">
+                                                            @if($errors->has('check_out_identity'))
+                                                                <div class="error text-danger">{{ $errors->first('check_out_identity') }}</div>
+                                                            @endif
                                                         </div>
                                                         <div class="form-group pb-3">
                                                             <label class="form-label" for="image-id">Foto KTP</label>
                                                             <input type="file" required class="form-control mb-0" id="image-id" name="check_out_identity" capture="environment">
+                                                            @if($errors->has('check_out_identity'))
+                                                            <div class="error text-danger">{{ $errors->first('check_out_identity') }}</div>
+                                                        @endif
                                                         </div>
                                                         <div class="d-flex justify-content-center">
                                                             <button type="button" class="btn btn-warning" onclick="approveCheckOut(this)">Checkout</button>

@@ -245,9 +245,20 @@ class UserRegisterController extends Controller
 
             $checkOutImage = '';
             $checkOutIdentity = '';
+            $request->validate([
+                        'check_in_image' => 'required|image|mimes:jpg,jpeg,png',
+                        'check_in_identity' => 'required|image|mimes:jpg,jpeg,png'
+                    ],[
+                        'check_in_image.required' => 'Foto bukti harus diisi!',
+                        'check_in_image.image' => 'Foto bukti harus berupa image',
+                        'check_in_image.identity' => 'Foto bukti harus bertipe jpg,jpeg dan png',
+                        'check_in_identity.required' => 'Foto KTP harus diisi!',
+                        'check_in_identity.image' => 'Foto KTP harus berupa image',
+                        'check_in_identity.identity' => 'Foto KTP harus bertipe jpg,jpeg dan png',
+                    ]);
 
             if($request->hasFile('check_in_image'))
-            {
+            {      
                 $file= $request->file('check_in_image');
                 $image_name = 'check-in-image-' . time() .'.'. $file->getClientOriginalExtension();
                 $file->move(public_path('uploads/check_in_image/'),$image_name);   
@@ -256,6 +267,9 @@ class UserRegisterController extends Controller
 
             if($request->hasFile('check_in_identity'))
             {
+                $request->validate([
+                    
+                ]);
                 $file= $request->file('check_in_identity');
                 $identity_image = 'check-in-identity-' . time() .'.'. $file->getClientOriginalExtension();
                 $file->move(public_path('uploads/check_in_identity/'),$identity_image); 
@@ -287,7 +301,17 @@ class UserRegisterController extends Controller
 
         try {
             DB::beginTransaction();
-
+            $request->validate([
+                'check_out_image' => 'required|image|mimes:jpg,jpeg,png',
+                'check_out_identity' => 'required|image|mimes:jpg,jpeg,png'
+            ],[
+                'check_out_image.required' => 'Foto bukti harus diisi!',
+                'check_out_image.image' => 'Foto bukti harus berupa image',
+                'check_out_image.identity' => 'Foto bukti harus bertipe jpg,jpeg dan png',
+                'check_out_identity.required' => 'Foto KTP harus diisi!',
+                'check_out_identity.image' => 'Foto KTP harus berupa image',
+                'check_out_identity.identity' => 'Foto KTP harus bertipe jpg,jpeg dan png',
+            ]);
             $checkOutImage = '';
             $checkOutIdentity = '';
 

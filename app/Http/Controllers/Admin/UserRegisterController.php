@@ -224,7 +224,15 @@ class UserRegisterController extends Controller
     }
 
     public function reschedule($id){
-        $data['schedule'] = RegisterUser::where('id', $id)->first();
+        $schedule = RegisterUser::where('id', $id)->first();
+        if(!$schedule){
+            return redirect()->route('admin.user-register.index');
+        }
+        if($schedule->check_in != null && $schedule->check_out != null){
+            Alert::warning('Warning', 'Visitor tidak dapat di reschedule!');
+            return redirect()->route('admin.user-register.index');
+        }
+        $data['schedule'] = $schedule;
         return view('admin.user-register.reschedule',$data);
     }
 

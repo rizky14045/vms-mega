@@ -96,7 +96,9 @@
                     
                                 <td class="text-nowrap">
                                     <a href="{{route('admin.user-register.detail',['id'=>$register->id])}}" class="btn btn-warning btn-sm">Detail</a>
-                                    <a href="{{route('admin.user-register.reschedule',['id'=>$register->id])}}" class="btn btn-primary btn-sm">Reschedule</a>
+                                    @if ($register->check_in == null && $register->check_out == null)
+                                        <a href="{{route('admin.user-register.reschedule',['id'=>$register->id])}}" class="btn btn-primary btn-sm">Reschedule</a>    
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach
