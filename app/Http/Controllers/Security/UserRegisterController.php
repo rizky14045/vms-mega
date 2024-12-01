@@ -243,8 +243,8 @@ class UserRegisterController extends Controller
         try {
             DB::beginTransaction();
 
-            $checkOutImage = '';
-            $checkOutIdentity = '';
+            $checkInImage = '';
+            $checkInIdentity = '';
             $request->validate([
                         'check_in_image' => 'required|image|mimes:jpg,jpeg,png',
                         'check_in_identity' => 'required|image|mimes:jpg,jpeg,png'
@@ -273,7 +273,7 @@ class UserRegisterController extends Controller
                 $file= $request->file('check_in_identity');
                 $identity_image = 'check-in-identity-' . time() .'.'. $file->getClientOriginalExtension();
                 $file->move(public_path('uploads/check_in_identity/'),$identity_image); 
-                $checkOutIdentity = $identity_image;
+                $checkInIdentity = $identity_image;
             }
 
           
@@ -282,7 +282,7 @@ class UserRegisterController extends Controller
             $checkIn->check_in_status = false;
             $checkIn->check_in = now();
             $checkIn->check_in_image = $checkInImage;
-            $checkIn->check_in_identity = $checkOutIdentity;
+            $checkIn->check_in_identity = $checkInIdentity;
             $checkIn->check_out_status = true;
             $checkIn->check_in_by = Auth::user()->id;
             $checkIn->save();
